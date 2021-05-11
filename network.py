@@ -13,7 +13,7 @@ class Network:
     def __init__(self):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         #Put your IP Address Here
-        self.server = "10.0.0.9"
+        self.server = ""
         self.port = 10011
         self.addr = (self.server, self.port)
         self.players = self.connect()
@@ -59,11 +59,13 @@ class Network:
 
     def send(self, typ, data):
         try:
+            print("typedata",typ,data)
             info = {"type": typ, "data": data}
             data_to_send = pickle.dumps(info)
             data_size = bytes(f'{len(data_to_send):<{10}}', "utf-8")
             self.client.send(data_size + data_to_send)
            # return pickle.loads(self.client.recv(2048))
+
         except socket.error as e:
             print(e)
 
@@ -72,24 +74,26 @@ class Network:
         #     return pickle.loads(self.client.recv(2048))
         # except socket.error as e:
         #     print(e)
+        print("in receive")
         full_msg = b''
         new_msg = True
         data_to_receive = 16
         msglen = 0
         while True:
             msg = self.client.recv(data_to_receive)
-
             if new_msg:
+                print('new msg received')
                 msglen = int(msg[:HEADERSIZE])
                 new_msg = False
-
-
             full_msg += msg
             data_to_receive = msglen - len(full_msg[HEADERSIZE:])
+            print('len(full_msg) - HEADERSIZE', len(full_msg) - HEADERSIZE)
+            print('msglen', msglen)
             if len(full_msg) - HEADERSIZE == msglen:
                 data = pickle.loads(full_msg[HEADERSIZE:])
+                #print('data is', data)
                 new_msg = True
                 full_msg = b""
                 break
-
         return data
+

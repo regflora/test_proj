@@ -11,7 +11,7 @@ from Guess import Accusation
 from Guess import Suggestion
 from respond import Respond
 
-server = "10.0.0.9"
+server = ""
 port = 10011
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -26,7 +26,7 @@ s.listen(3)
 print("Waiting for Connection...")
 
 #players = [User(1, "Alex", Characters.Colonel_Mustard, (0, 0), [Characters.PP, Rooms.Kitchen, Weapons.Rope]), User(
-#    2, "Kate", Characters.Miss_Scarlet, (600, 600), [Characters.MW, Rooms.Billiard, Weapons.Knife])]  # mocked 2 users to test start game
+ #   2, "Kate", Characters.Miss_Scarlet, (600, 600), [Characters.MW, Rooms.Billiard, Weapons.Knife])]  # mocked 2 users to test start game
 players = []
 # Track how many players have connected
 current_player = 0
@@ -63,7 +63,7 @@ def client_thread(connection, player):
                     new_msg = True
                     full_msg = b""
                     break
-                    
+
             if not data:
                 print("Disconnected")
                 break
@@ -82,13 +82,15 @@ def client_thread(connection, player):
                     send_data_to_all_clients(data)
                     send_data_to_all_clients(data1)
                 elif data["type"] == Respond.ACCUSATION:
-                    connection.sendall(pickle.dumps(data))
+                    #connection.sendall(pickle.dumps(data))
+                    send_data_to_all_clients(data)
                 elif data["type"] == Respond.SUGGESTION:
                     send_data_to_all_clients(data)
                 elif data["type"] == Respond.TOTAL_PLAYERS:
                     data = {'type' : Respond.TOTAL_PLAYERS, 'data': len(players)}
                     data_to_send = pickle.dumps(data)
                     data_size = bytes(f'{len(data_to_send):<{10}}', "utf-8")
+                    print("data", data)
                     send_data_to_all_clients(data)
                    # connection.sendall(data_size + data_to_send)
 #                elif data["type"] == Respond.LIST_OF_PLAYERS:
@@ -106,11 +108,15 @@ def client_thread(connection, player):
                         send_data_to_all_clients(data)
                 elif data["type"] == Respond.PLAYER_COUNTER_S:
                         send_data_to_all_clients(data)
-                # elif data["type"] == Respond.PLAYER_COUNTER_D:
-                #         send_data_to_all_clients(data)
                 elif data["type"] == Respond.GAME_LOG:
+                        print("DATA:", data)
                         send_data_to_all_clients(data)
-
+                elif data["type"] == Respond.SINGLE_USER:
+                        print("DATA1:",data)
+                        send_data_to_particular_client(data)
+                elif data["type"] == Respond.ANSWER:
+                        print("DATA1:",data)
+                        send_data_to_all_clients(data)
 
                 else:
                     connection.sendall("Improper Input")
@@ -119,6 +125,7 @@ def client_thread(connection, player):
 
     for key in playersToConnectionDict.keys(): # If client will disconnect then remove it from the player's dict
         if key == player:
+            print("key")
             del playersToConnectionDict[key]
             break
     print("Connection Disconnected")
@@ -128,10 +135,21 @@ def client_thread(connection, player):
 def send_data_to_all_clients(data):
     data_to_send = pickle.dumps(data)
     data_size = bytes(f'{len(data_to_send):<{10}}', "utf-8")
-
+    #print("playersToConnectionDict", playersToConnectionDict)
     for player in playersToConnectionDict:
         playersToConnectionDict[player].sendall(data_size + data_to_send)
 
+def send_data_to_particular_client(data): #pl is # of player in players list
+    print("insideeeee", data)
+    value = data["data"]
+    #print("index",pl)
+    index = value[0]
+    message = value[1]
+    print("particular", data)
+    data1 = {'type': Respond.SINGLE_USER, 'data': message}
+    data_to_send = pickle.dumps(data1)
+    data_size = bytes(f'{len(data_to_send):<{10}}', "utf-8")
+    playersToConnectionDict[index].sendall(data_size + data_to_send)
 
 
 while True:
@@ -144,3 +162,4 @@ while True:
 
     start_new_thread(client_thread, (connection, current_player))
     current_player += 1
+

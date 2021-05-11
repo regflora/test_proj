@@ -10,6 +10,7 @@ class Respond(Enum):
     TOTAL_PLAYERS = int,
     PLAYER_COUNTER_S = "",
     CHARACTER_MOVE = [User, int, int],
+    SINGLE_USER = [],
     CHARACTER_CONNECTED = User
     CHARACTER_MOVE_MSG = ""
     GAME_LOG = []

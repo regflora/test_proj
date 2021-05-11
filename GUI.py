@@ -193,15 +193,14 @@ Yellowimg = imageloading('yellow.png', 40, 40)
 white_block = imageloading("block.png", 2000, 50)
 
 current_screen = SCREENS.START
-html_text_line = None
 
+html_text_line = None
 display_start_characters = 1
 end_player_turn_flag = 0
 #turn_counter = -1
 character_turn_start = 1
 suggestion_flag = 0
 move_character_flag = 0
-
 
 
 def resetscreen():
@@ -266,53 +265,6 @@ def display_rooms(network):
     # textRect.center = (1000, 400)
     # display_surface.blit(text, textRect)
 
-def display_sug_text():
-    font_small = pygame.font.Font('./data/fonts/Montserrat-Bold.ttf', 15)
-    font_xsmall = pygame.font.Font('./data/fonts/Montserrat-Regular.ttf', 12)
-
-    text = font_small.render("Suggestions/Accusations", True, PURPLE, white)
-    textRect = text.get_rect()
-    textRect.topleft = (815, 300-30)
-    display_surface.blit(text, textRect)
-
-    text = font_small.render("Disprove Suggestion", True, PURPLE, white)
-    textRect = text.get_rect()
-    textRect.topleft = (815, 565-30)
-    display_surface.blit(text, textRect)
-
-    #displaying labels for input boxes suggestions
-    text1 = font_small.render("Enter suspect:", True, BLACK, white)
-    textRect = text1.get_rect()
-    textRect.topleft = (815, 320-30)
-    display_surface.blit(text1, textRect)
-    text1 = font_xsmall.render("(colonel_mustard, miss_scarlet, pp, green, mw, peacock)", True, BLACK, white)
-    textRect = text1.get_rect()
-    textRect.topleft = (815, 340-30)
-    display_surface.blit(text1, textRect)
-
-    text2 = font_small.render("Enter room:", True, BLACK, white)
-    textRect = text2.get_rect()
-    textRect.topleft = (815, 390-30)
-    display_surface.blit(text2, textRect)
-    text2 = font_xsmall.render("(ballroom, billiard, conservatory, dining, hall, kitchen)", True, BLACK, white)
-    textRect = text2.get_rect()
-    textRect.topleft = (815, 410-30)
-    display_surface.blit(text2, textRect)
-
-    text3 = font_small.render("Enter weapon:", True, BLACK, white)
-    textRect = text3.get_rect()
-    textRect.topleft = (815, 460-30)
-    display_surface.blit(text3, textRect)
-    text3 = font_xsmall.render("(candlestick, knife, pipe, revolver, wrench, rope)", True, BLACK, white)
-    textRect = text3.get_rect()
-    textRect.topleft = (815, 480-30)
-    display_surface.blit(text3, textRect)
-
-    text4 = font_small.render("Enter card to disprove:", True, BLACK, white)
-    textRect = text4.get_rect()
-    textRect.topleft = (815, 585-30)
-    display_surface.blit(text4, textRect)
-
 def display_sug_labels():
     # adding section for suggestion inputs display
     font_small = pygame.font.Font('./data/fonts/Montserrat-Bold.ttf', 15)
@@ -362,13 +314,18 @@ def display_sug_labels():
     display_surface.blit(text4, textRect)
 
 def display_sug_boxes():
-    #displaying input boxes for suggestions
+
+    # displaying input boxes for suggestions
     global suspect_input, room_input, weapon_input, disprove_input
-    suspect_input = UITextEntryLine(relative_rect=Rect(840, 360-30, 325, 25), manager=ui_manager)
-    room_input = UITextEntryLine(relative_rect=Rect(840, 430-30, 325, 25), manager=ui_manager)
-    weapon_input = UITextEntryLine(relative_rect=Rect(840, 500-30, 325, 25), manager=ui_manager)
-    disprove_input = UITextEntryLine(relative_rect=Rect(840, 625-30, 325, 25), manager=ui_manager)
-    #return suspect_input, room_input, weapon_input
+    suspect_input = UITextEntryLine(relative_rect=Rect(
+        840, 360-30, 325, 25), manager=ui_manager)
+    room_input = UITextEntryLine(relative_rect=Rect(
+        840, 430-30, 325, 25), manager=ui_manager)
+    weapon_input = UITextEntryLine(relative_rect=Rect(
+        840, 500-30, 325, 25), manager=ui_manager)
+    disprove_input = UITextEntryLine(relative_rect=Rect(
+        840, 625-30, 325, 25), manager=ui_manager)
+    # return suspect_input, room_input, weapon_input
 
 def display_userinput_options(network,character_room):
     ucards = []
@@ -385,11 +342,99 @@ def display_userinput_options(network,character_room):
     textRect.topleft = (920, 390-30)
     display_surface.blit(text2, textRect)
 
+
 def reset_input_suggestions():
     suspect_input.set_text('')
     room_input.set_text('')
     weapon_input.set_text('')
 
+
+def reset_input_disprove():
+    disprove_input.set_text('')
+
+
+def display_suggest_button():
+    font_small = pygame.font.Font('freesansbold.ttf', 15)
+    suggest_button = pygame.draw.rect(
+        display_surface, YELLOW, (930, 535-30, 175, 25))
+    text = font_small.render('Make a Suggestion', True, BLACK, YELLOW)
+    textRect = text.get_rect()
+    textRect.center = (965+50, 535-30+15)
+    display_surface.blit(text, textRect)
+    return suggest_button
+
+
+def display_disprove_button():
+    font_small = pygame.font.Font('freesansbold.ttf', 15)
+    disprove_button = pygame.draw.rect(
+        display_surface, YELLOW, (930, 645-30, 175, 25))
+    text = font_small.render('Reveal a Card', True, BLACK, YELLOW)
+    textRect = text.get_rect()
+    textRect.center = (965+50, 645-30+15)
+    display_surface.blit(text, textRect)
+    return disprove_button
+
+
+def display_accusation_boxes():
+    # Accusation Display
+    font_small = pygame.font.Font('./data/fonts/Montserrat-Bold.ttf', 15)
+    font_xsmall = pygame.font.Font('./data/fonts/Montserrat-Regular.ttf', 12)
+
+    text = font_small.render("Suggestions/Accusations", True, PURPLE, white)
+    textRect = text.get_rect()
+    textRect.topleft = (815, 300-30)
+    display_surface.blit(text, textRect)
+
+    text = font_small.render("Disprove Suggestion", True, PURPLE, white)
+    textRect = text.get_rect()
+    textRect.topleft = (815, 565-30)
+    display_surface.blit(text, textRect)
+
+    #displaying labels for input boxes suggestions
+    text1 = font_small.render("Enter suspect:", True, BLACK, white)
+    textRect = text1.get_rect()
+    textRect.topleft = (815, 320-30)
+    display_surface.blit(text1, textRect)
+    text1 = font_xsmall.render("(colonel_mustard, miss_scarlet, pp, green, mw, peacock)", True, BLACK, white)
+    textRect = text1.get_rect()
+    textRect.topleft = (815, 340-30)
+    display_surface.blit(text1, textRect)
+
+    text2 = font_small.render("Enter room:", True, BLACK, white)
+    textRect = text2.get_rect()
+    textRect.topleft = (815, 390-30)
+    display_surface.blit(text2, textRect)
+    text2 = font_xsmall.render("(ballroom, billiard, conservatory, dining, hall, kitchen)", True, BLACK, white)
+    textRect = text2.get_rect()
+    textRect.topleft = (815, 410-30)
+    display_surface.blit(text2, textRect)
+
+    text3 = font_small.render("Enter weapon:", True, BLACK, white)
+    textRect = text3.get_rect()
+    textRect.topleft = (815, 460-30)
+    display_surface.blit(text3, textRect)
+    text3 = font_xsmall.render("(candlestick, knife, pipe, revolver, wrench, rope)", True, BLACK, white)
+    textRect = text3.get_rect()
+    textRect.topleft = (815, 480-30)
+    display_surface.blit(text3, textRect)
+
+    text4 = font_small.render("Enter card to disprove:", True, BLACK, white)
+    textRect = text4.get_rect()
+    textRect.topleft = (815, 585-30)
+    display_surface.blit(text4, textRect)
+
+    #displaying input boxes for suggestions
+    global suspect_input, room_input, weapon_input, disprove_input
+    suspect_input = UITextEntryLine(relative_rect=Rect(840, 360-30, 325, 25), manager=ui_manager)
+    room_input = UITextEntryLine(relative_rect=Rect(840, 430-30, 325, 25), manager=ui_manager)
+    weapon_input = UITextEntryLine(relative_rect=Rect(840, 500-30, 325, 25), manager=ui_manager)
+    disprove_input = UITextEntryLine(relative_rect=Rect(840, 625-30, 325, 25), manager=ui_manager)
+    #return suspect_input, room_input, weapon_input
+
+def reset_input_suggestions():
+    suspect_input.set_text('')
+    room_input.set_text('')
+    weapon_input.set_text('')
 
 def reset_input_disprove():
     disprove_input.set_text('')
@@ -885,7 +930,7 @@ def send_next_player_turn(network):
         print("IN CHARACTER TURN START IF")
         turn_counter = 0
         character_turn_start = 0
-    elif turn_counter == 2:
+    elif turn_counter == 5 :
         print("IN MIDDLE IF")
         turn_counter = 0
     else:
@@ -894,47 +939,6 @@ def send_next_player_turn(network):
     print("SENDING TURN COUNTER=" , turn_counter)
     network.send(Respond.PLAYER_COUNTER_S, turn_counter)
     print("*********END SEND NEXT PLAYER***********")
-
-def send_next_player_turn_d(network):
-    print("**********IN SEND NEXT PLAYER DISPROVE***********")
-    global character_turn_start_d
-    global turn_counter_d
-    if character_turn_start_d == 1:
-        print("IN CHARACTER TURN START IF")
-        turn_counter_d = 0
-        character_turn_start_d = 0
-    elif turn_counter_d == 2:
-        print("IN MIDDLE IF")
-        turn_counter_d = 0
-    else:
-        print("IN ELSE")
-        turn_counter_d+= 1
-    print("SENDING TURN DISPROVE COUNTER=" , turn_counter_d)
-    network.send(Respond.PLAYER_COUNTER_D, turn_counter_d)
-    print("*********END SEND NEXT PLAYER DISPROVE***********")
-
-def check_player_turn_d(turn_d):
-    global turn_counter_d
-    print("in check player turn disprove")
-    print("turn=", turn_d)
-    character = ""
-    turn_counter_d = turn_d
-    print("turn_counter=", turn_counter)
-    if turn_counter_d == 0:
-        character = "Colonel Mustard"
-    elif turn_counter_d == 1:
-        character = "Miss Scarlet"
-    elif turn_counter_d == 2:
-        character = "Mr. Plum"
-    elif turn_counter_d == 3:
-        character = "Mr. Green"
-#        result = True
-    elif turn_counter_d == 4:
-        character = "Mr. White"
-    elif turn_counter_d == 5:
-        character = "Mr. Peacock"
-    print("PLAYER TURN IS : ", character)
-    return character
 
 
 def next_disprove_turn(current_user, suggestor, disprove_tracker):
@@ -957,7 +961,11 @@ def next_disprove_turn(current_user, suggestor, disprove_tracker):
     print("DISPROVE LISTTT:", disprove_list)
 
     disprove_tracker = disprove_tracker + 1
-    next_player_to_disprove = disprove_list[disprove_tracker]
+    if disprove_tracker < 6: #counter only goes up to 5 for all users
+        next_player_to_disprove = disprove_list[disprove_tracker]
+    else:
+        next_player_to_disprove = suggestor
+        disprove_tracker = 0
 
     print("--NEXT PLAYER: "+ next_player_to_disprove + " DISPROVE OR PASS--")
     return next_player_to_disprove, disprove_tracker
@@ -978,41 +986,47 @@ def makeSuggestion(network, character_room, sug_room, suspect, sug_weap):
             suspect_user_obj = user
 
 
-
     #current_user = network.user.character.value[0]
     current_user = (network.user.character.name).lower()
     print("CURRENT USERRR:", current_user)
     if check_player_turn(turn_counter) == network.user.character.value[0]:
             #current user's turn
             if sug_room in character_room:
+                smsg = []
+
                 suggestion = Suggestion(network.user, sug_room, sug_weap, suspect)
                 message = suggestion.make_guess()
-
+                smsg.append("<br>"+message)
                 suggestor = (network.user.character.name).lower()
                 print("SUGGESTOR:", suggestor)
                 disprove_tracker = 0 #first user (person who made the suggestion's index)
                 closed = 0
                 suggestion_list = [suspect, sug_room, sug_weap, suggestor, disprove_tracker, closed]
                 network.send(Respond.SUGGESTION, suggestion_list)
-                #next_player_name,disprove_tracker = next_disprove_turn(current_user, suggestor, disprove_tracker)
+                next_player_name,disprove_tracker = next_disprove_turn(current_user, suggestor, disprove_tracker)
 
                 # move suspect
                 x_pos, y_pos = get_room_coords(sug_room)
-                update_list_of_users_pos(suspect_user_obj, x_pos, y_pos)
-                print(suspect + "user moved")
+                # update_list_of_users_pos(suspect_user_obj, x_pos, y_pos)
+                move_message = [suspect_user_obj, x_pos,y_pos]
+                network.send(Respond.CHARACTER_MOVE, move_message)
 
+                print(suspect + "user moved")
+                smsg.append("<br>"+suspect+" has been moved to "+sug_room)
+                moved_to_room_from_suggestion = 1
                 suggestion_flag = 1
                 #end_player_turn_flag = 1
-                #print("--NEXT PLAYER: "+ next_player_name + " DISPROVE OR PASS--")
-                #send_next_player_turn_d(network)
-                smsg = []
-                smsg.append("<br>"+message)
+
+                print("NEXT PLAYER INDEX FOR DICT", disprove_tracker)
+                network.send(Respond.SINGLE_USER,[disprove_tracker, "disprove"])
+                smsg.append("<br>"+ next_player_name+":disprove or pass.")
                 network.send(Respond.GAME_LOG,smsg)
+
                 return suggestion
             else:
                 message = "Suggestion must include current room. Suggest again or end turn."
                 print(message)
-                game_logs.append(message)
+                #game_logs.append(message)
                 # network.send(Respond.SUGGESTION,[None,message])
                 network.send(Respond.SUGGESTION, [None])  # ,message])
                 #end_player_turn_flag = 1
@@ -1036,46 +1050,53 @@ def disproveSuggestion(network, suggestion_list, card):
     closed = suggestion_list[5]
     #current_username = (network.user.name).lower()
 
+
     suggestion = Suggestion(network.user, sug_room, sug_weap, suspect)
     if suggestion_list is None:
         reset_input_disprove()
     #player's turn to disprove
     msg_pass = []
     current_user_name = (network.user.character.name).lower()
+    print("BEFORE TRACKER",disprove_tracker)
     next_player_name, disprove_tracker = next_disprove_turn(current_user_name, suggestor, disprove_tracker)
+    print("AFTER TRACKER",disprove_tracker)
+
     print("NEXT PLAYER NAME: ", next_player_name)
     print("CURRENT USER NAME ", current_user_name)
     print("DISPROVE COUNTER ", disprove_tracker)
     if next_player_name == current_user_name:
         if "pass" in card:
-            print("IN PASSSSSS")
-            #tracker[turn_counter_d] = 1
+            print("IN PASSSSSS TRACKER", disprove_tracker)
             #disprove_tracker = disprove_tracker + 1
             suggestion_list[-2] = disprove_tracker
             suggestion_list[-1] = 0 #closed = 0
             #msg_pass.append("<br>" +network.user.name + " was unable to disprove suggestion.")
-            if closed == 0 and disprove_tracker == len(list_of_users) : #if suggestion not closed and all users have attempted
+            if closed == 0 and disprove_tracker == 5 : #if suggestion not closed and all users have attempted
                 msg = "<br> All other users have attempted disprove/pass"
                 msg = "<br>" + suggestor + " - please accuse or end turn" #suggestions[-1][-3] = suggestor
-                print(msg_pass)
+                print(msg)
                 print("---ALL USERS DISPROVED: ",suggestion_list)
                 network.send(Respond.SUGGESTION, suggestion_list)
+                print("AFTER FIRST PASS", suggestion_list)
                 #writing to log
+                next_player_name, disprove_tracker = next_disprove_turn(current_user_name, suggestor, disprove_tracker)
                 msg_pass.append("<br>THE LAST USER (" + current_user_name + ") was unable to disprove suggestion.")
+                msg_pass.append("<br>"+ next_player_name +": Please accuse or end turn.")
                 network.send(Respond.GAME_LOG, msg_pass)
             else:
                 #msg_pass.append("<br> next_player_username please disprove or pass.")
                 print("---USER PASSED: ",suggestion_list)
-                #send_next_player_turn_d(network)
                 #disprove_tracker = disprove_tracker + 1
                 suggestion_list[-2] = disprove_tracker
                 print("PASS SUG LIST:", suggestion_list)
                 network.send(Respond.SUGGESTION, suggestion_list)
                 print("disprove tracker:", disprove_tracker)
                 #writing to log
-                msg_pass.append("<br>" +network.user.character.name + " was unable to disprove suggestion.")
+                next_player_name, disprove_tracker = next_disprove_turn(current_user_name, suggestor, disprove_tracker)
+                msg_pass.append("<br>" + current_user_name + " was unable to disprove suggestion.")
+                msg_pass.append("<br>"+ next_player_name+": Please disprove or pass.")
                 network.send(Respond.GAME_LOG, msg_pass)
-                #network.send(Respond.DISPROVE_COUNTER, disprove_counter)
+                network.send(Respond.SINGLE_USER,[disprove_tracker, "disprove"])
                 return
         else:  # if there's an open suggestion
             message = suggestion.disprove_suggestion(network.user.cards, card)
@@ -1086,27 +1107,30 @@ def disproveSuggestion(network, suggestion_list, card):
                 suggestion_list[-1] = 0 #closed = 0
                 network.send(Respond.SUGGESTION, suggestion_list)
                 print(message)
-                if closed == 0 and disprove_tracker == len(list_of_users):
+                if closed == 0 and disprove_tracker == 5:
                     msg = suggestor + " please accuse or end turn" #suggestions[-1][-3] = suggestor
                     print("---ALL USERS UNABLE TO DISPROVE: ", suggestion_list)
                     print(msg)
                     print("disprove counter:", disprove_tracker)
                     #writing to log
-                    msg_pass.append("<br>LAST USER ("+network.user.name+") was unable to disprove suggestion.")
+                    msg_pass.append("<br>LAST USER ("+current_user_name+") was unable to disprove suggestion.")
+                    next_player_name, disprove_tracker = next_disprove_turn(current_user_name, suggestor, disprove_tracker)
+                    msg_pass.append("<br>"+ next_player_name +": Please accuse or end turn.")
                     network.send(Respond.GAME_LOG, msg_pass)
                 else:
-                    #msg_list2.append("<br> next_player_username please disprove or pass.")
                     print("---USER DISPROVE ATTEMPT FAIL: ",suggestion_list)
                     network.send(Respond.SUGGESTION, suggestion_list)
                     #wrting to log
-                    msg_pass.append("<br>" +network.user.name + " was unable to disprove suggestion.")
                     network.send(Respond.GAME_LOG, msg_pass)
                     #disprove_tracker = disprove_tracker + 1
                     suggestion_list[-2] = disprove_tracker
                     suggestion_list[-1] = 0
                     network.send(Respond.SUGGESTION, suggestion_list)
-                    #network.send(Respond.DISPROVE_COUNTER, disprove_counter)
+                    next_player_name, disprove_tracker = next_disprove_turn(current_user_name, suggestor, disprove_tracker)
+                    msg_pass.append("<br>" +current_user_name + " was unable to disprove suggestion.")
+                    msg_pass.append("<br>"+ next_player_name+": Please disprove or pass.")
                     print("disprove counter:", disprove_tracker)
+                    network.send(Respond.SINGLE_USER,[disprove_tracker, "disprove"])
                     #send_next_player_turn_d(network)
 
                 reset_input_disprove()
@@ -1116,7 +1140,7 @@ def disproveSuggestion(network, suggestion_list, card):
                 suggestion_list[-2] = disprove_tracker
                 suggestion_list[-1] = 1 #closing suggestion
                 print("SUGGESTION DISPROVED - NEXT USER TURN")
-                msg_pass.append("<br> SUGGESTION WAS DISPROVED")
+                msg_pass.append("<br>"+current_user_name+" has DISPROVED sugguestion with: "+card)
                 network.send(Respond.GAME_LOG, msg_pass)
                 network.send(Respond.SUGGESTION, suggestion_list)
                 end_player_turn_flag = 1
@@ -1133,22 +1157,30 @@ def make_accusation(network, room, weapon, suspect):
     global end_player_turn_flag
     end_player_turn_flag = 1
     print(" end_player_turn_flag = " , end_player_turn_flag)
-    if room in character_room:
-        accusation = Accusation(player=network.user,
-                                room=room, weapon=weapon, suspect=suspect)
-        result = accusation.make_guess(game=new_game)
-        accusation_list = [suspect, room, weapon]
-        network.send(Respond.ACCUSATION, [accusation_list])
-        game_logs.append(result)
+    print("possible accusation: ", room, weapon, suspect)
+    ac_logs = []
+    #if room in character_room:
+    # game.confidential_case = received_data.get("ANSWER")
+    # print("A:", game.confidential_case)
+    accusation = Accusation(player=network.user,
+                            room=room, weapon=weapon, suspect=suspect)
+    result = accusation.make_guess(game=new_game)
+    accusation_list = [suspect, room, weapon]
+    network.send(Respond.ACCUSATION, accusation_list)
+    ac_logs.append(result)
+    print("result:", result)
+    network.send(Respond.GAME_LOG, ac_logs)
+    print("result",result)
+    send_next_player_turn(network)
+    #print("answer", answer)
 
-        return accusation
+    #return accusation
 
-    else:
+    if result == "Incorrect, turn lost!":
         message = "Accusation is incorrect. Your turn has been lost."
+        send_next_player_turn(network)
         print(message)
-        game_logs.append(message)
-        network.send(Respond.ACCUSATION, [None])
-        return
+
 
 
 def display_start(pygame, network, clock):
@@ -1207,7 +1239,7 @@ def display_start(pygame, network, clock):
             display_surface.blit(text, textRect)
 
             # name = input_box1.text
-            if (input_box1.name_ready == True and character_assigned == False and players_num < 3):
+            if (input_box1.name_ready == True and character_assigned == False and players_num < 6):
                 player_id = randint(0, 1000)
                 name = input_box1.text
 #                character = sys_random.choice(list(Characters))
@@ -1263,7 +1295,7 @@ def display_start(pygame, network, clock):
                 m2 = new_player.name + " playing as " + new_player.character.name
                 print(m1, m2)
 
-            if (input_box1.name_ready == True and character_assigned == False and players_num > 4):
+            if (input_box1.name_ready == True and character_assigned == False and players_num > 7):
                 text = font_small.render(
                     "Hi,you cannot join the game at this point ", True, RED, white)
                 textRect = text.get_rect()
@@ -1271,7 +1303,7 @@ def display_start(pygame, network, clock):
                 display_surface.blit(text, textRect)
 
             # start the game
-            if(players_num == 3):
+            if(players_num == 6):
                 game_id = randint(0, 1000)
                 players = network.get_connected_users()
                 global eachInASeparateLine
@@ -1285,7 +1317,9 @@ def display_start(pygame, network, clock):
                 character = sys_random.choice(list(Characters))
                 weapon = sys_random.choice(list(Weapons))
                 room = sys_random.choice(list(Rooms))
-                confidential_case = [character, room, weapon]
+                #confidential_case = [character, room, weapon]
+                confidential_case = [character.name.lower(), room.name.lower(), weapon.name.lower()]
+                print("CC", confidential_case)
                 global new_game
                 new_game = Game(game_id, players, game_logs,
                                 suggestions, accusations, confidential_case)
@@ -1302,8 +1336,6 @@ def display_start(pygame, network, clock):
                 display_sug_boxes()
                 display_chatBox()
                 suggest_button = display_suggest_button()
-                disprove_button = display_disprove_button()
-                pass_button = display_pass_button()
                 #accusation_button = display_accusation_button()
                 chat_button = display_chat_button()
                 global current_screen
@@ -1316,7 +1348,6 @@ def display_start(pygame, network, clock):
         # game_id = randint(0, 1000)
         # start_game(game_id, player_1)
         # print(getCharacterPosition(player_1.character))
-
 
 def display_chat_labels():
     # adding section for suggestion inputs display
@@ -1468,9 +1499,9 @@ def move_characters(network, player, room, direction):
                 player.current_position[1] -= 600
         else:
             player.current_position[1] += steps
-        # move_msgs = []
-        # move_msgs.append("<br>" +  network.user.character.value[0] + " moved to room " + room + "<br>")
-        # network.send(Respond.GAME_LOG, move_msgs)
+        move_msgs = []
+        move_msgs.append("<br>" +  network.user.character.value[0] + " moved to room " + room + "<br>")
+        network.send(Respond.GAME_LOG, move_msgs)
         if check_move_character_to_hallway(network, player, room, direction) == True:
             return
         else:
@@ -1519,6 +1550,7 @@ def listen_incoming_msgs(network):
                 for i in value['data']:
                     received_data.setdefault('GAME_LOG', []).append(i)
             logs = received_data.get('GAME_LOG')
+
             if html_text_line is not None: #fixed issue of gamelog scrolling
                 html_text_line.kill()
             html_text_line = create_large_text_box(listToString(logs))
@@ -1555,12 +1587,19 @@ def listen_incoming_msgs(network):
 #            test = received_data.get('PLAYER_COUNTER_S')
             check_player_turn(value['data'])
             print("PLAYER_COUNTER_S = " , value['data'])
-        # if(value['type'] is Respond.DISPROVE_COUNTER):
-        #     print("DISPROVE COUNTER: ", value['data'])
-        #     received_data = {'DISPROVE_COUNTER': value['data']}
+
         if(value['type'] is Respond.CHARACTER_MOVE_MSG):
             received_data = {'CHARACTER_MOVE_MSG': value['data']}
         print("Msg received", received_data)
+        if (value['type'] is Respond.SINGLE_USER):
+            print(value['data'])
+            print("single")
+            received_data.setdefault('SINGLE_USER',[]).append(value['data'])
+            print("single after")
+        # if (value['type'] is Respond.ANSWER):
+        #     print(value['data'])
+        #     print("ANSWERRRR",value['data'])
+        #     received_data.setdefault('ANSWER',[]).append(value['data'])
 
 
 def main() -> None:
@@ -1619,16 +1658,20 @@ def main() -> None:
                             network.user.current_position[0], network.user.current_position[1])
                         new_move_list = check_valid_move_dir(network.user.current_position[0],
                                                              network.user.current_position[1], character_room)
-                        #display_rooms(network)
-                        #display_characters(list_of_users, network)
-
+                        # display_rooms(network)
+                        # display_characters(list_of_users, network)
+                        #
                         #display_sug_boxes()
                         #display_chatBox()
-
+                        # display_sug_boxes()
+                        # display_chatBox()
+                        #
 
 #                        network.user.draw(display_surface)
 #                        pygame.display.update()
                         update_move_dir_list(new_move_list)
+
+
 
 
                         suggest_button = display_suggest_button()
@@ -1636,9 +1679,10 @@ def main() -> None:
                         chat_button = display_chat_button()
                         endturn_button = display_endturn_button()
 
+
+
                         # display_sug_boxes()
                         # display_chatBox()
-
                         if chat_button.collidepoint(pos):
                             msgs = []
                             msg = chat_box.get_text()
@@ -1646,7 +1690,7 @@ def main() -> None:
                             network.send(Respond.GAME_LOG, msgs)
                             reset_chat()
 
-                        display_sug_text()
+                        #display_sug_text()
                         display_userinput_options(network, character_room)
 
 
@@ -1662,29 +1706,33 @@ def main() -> None:
                             # resetting input boxes
                             reset_input_suggestions()
 
-                        disprove_button = display_disprove_button()
-                        pass_button = display_pass_button()
+                        if received_data.get('SINGLE_USER') is not None:
+                            print("SINGLE USERRRR")
+                            print(network.user.character.name)
+                            print('received_data disprove',received_data.get('SINGLE_USER')[-1])
+                            if received_data.get('SINGLE_USER')[-1] == "disprove":
+                                disprove_button = display_disprove_button()
+                                pass_button = display_pass_button()
 
-                        if disprove_button.collidepoint(pos):
-                            #network.send(Respond.SINGLE_USER,[2,"clear"])
-                            card = (disprove_input.get_text()).lower().strip()
-                            #disproveSuggestion(network, None, card)
-                            suggestions = received_data.get('SUGGESTION')
-                            if suggestions is not None:
-                                last_suggestion = suggestions[-1]
-                                print("disprove button ",last_suggestion)
-                                if last_suggestion is not None:  # if there's suggestion in there
-                                    disproveSuggestion(network, last_suggestion, card)#, log_players)
+                                if disprove_button.collidepoint(pos):
+                                    card = (disprove_input.get_text()).lower().strip()
+                                    #disproveSuggestion(network, None, card)
+                                    suggestions = received_data.get('SUGGESTION')
+                                    if suggestions is not None:
+                                        last_suggestion = suggestions[-1]
+                                        print("disprove button ",last_suggestion)
+                                        if last_suggestion is not None:  # if there's suggestion in there
+                                            disproveSuggestion(network, last_suggestion, card)#, log_players)
 
-                        if pass_button.collidepoint(pos):
-                            #network.send(Respond.SINGLE_USER,[1,"hello"])
-                            suggestions = received_data.get('SUGGESTION')
-                            print("pass button 1 ", suggestions)
-                            if suggestions is not None:
-                                last_suggestion = suggestions[-1] #suggestion list
-                                print("pass button 2", last_suggestion)
-                                if last_suggestion is not None: #if there's suggestion in there
-                                    disproveSuggestion(network,last_suggestion, "pass")
+                                if pass_button.collidepoint(pos):
+                                    #network.send(Respond.SINGLE_USER,[1,"hello"])
+                                    suggestions = received_data.get('SUGGESTION')
+                                    print("pass button 1 ", suggestions)
+                                    if suggestions is not None:
+                                        last_suggestion = suggestions[-1] #suggestion list
+                                        print("pass button 2", last_suggestion)
+                                        if last_suggestion is not None: #if there's suggestion in there
+                                            disproveSuggestion(network,last_suggestion, "pass")
 
                         if accusation_button.collidepoint(pos):
                             accu_sus = (suspect_input.get_text()).lower().strip()
@@ -1705,7 +1753,6 @@ def main() -> None:
                         if selected_option >= 0:
                             list1.main = list1.options[selected_option]
                             print('list', list1.main)
-
                             character_room = get_character_room(network.user.current_position[0], network.user.current_position[1])
                             move_characters(network,network.user,character_room,list1.main)
 #                            character_room = get_character_room(network.user.current_position[0], network.user.current_position[1])
@@ -1715,16 +1762,16 @@ def main() -> None:
                             network.send(Respond.CHARACTER_MOVE, message)
 
                             if network.user is not None:
-                                #display_rooms(network)
+                               # display_rooms(network)
                                 list1.draw(display_surface)
 
                                 print("AT BOTTOM")
-
-                                # display_characters(list_of_users, network)
+#
+                               # display_characters(list_of_users, network)
                                 # display_sug_boxes()
                                 # display_chatBox()
-                                #
-                                # network.user.draw(display_surface)
+
+                              #  network.user.draw(display_surface)
 
             ui_manager.process_events(event)
             # Draws the surface object to the screen.
@@ -1739,3 +1786,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
